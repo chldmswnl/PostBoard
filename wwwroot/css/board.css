@@ -1,0 +1,87 @@
+﻿.showPostWriter
+{
+    margin-left:20px;
+}
+
+.titleAndSort
+{
+    display:flex;
+    justify-content:space-between;
+}
+
+.titleAndSort select
+{
+    height:35px;
+    width:100px;
+}
+
+#refreshBtn {
+    width: 50px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    height: 40px;
+   background-color:white;
+}
+#refreshBtn i
+{
+    font-size:15px;
+}
+
+#postHead
+{
+    display:flex;
+    justify-content:space-between;
+}
+#postTitle
+{
+    font-size:18px;
+    font-weight:bold;
+    margin-right:10px;
+}
+#postWriter, #postDate, #postView {
+    font-weight: bold;
+    font-size: 13px;
+    color: #525150;
+}
+
+#postSubHead
+{
+    display:flex;
+}
+
+#postDate, postView {
+    margin-right: 15px;
+}
+#postBtns
+{
+
+    margin-bottom:30px;
+
+}
+
+#postContent
+{
+    padding:20px;
+}
+
+#postComment
+{
+    display:flex;
+
+}
+
+#post
+{
+    display:flex;
+    flex-direction:column;
+}
+
+#floatingTextarea
+{
+    margin-right:10px;
+}
+
+#commentTitle {
+    margin: 20px 0;
+}

@@ -1,0 +1,28 @@
+﻿.tagInput
+{
+    width:300px !important;
+    margin-right:20px;
+}
+
+.new-form-group {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+    .new-form-group label {
+        margin-right: 10px;
+    }
+
+.tagBtn {
+    border: none;
+    padding:5px 15px;
+    border-radius: 10px;
+
+    color: #505152;
+    font-size:13px;
+}
+
+.formBtns
+{
+    margin-top:40px;
+}

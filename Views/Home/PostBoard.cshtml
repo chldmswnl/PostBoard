@@ -1,0 +1,180 @@
+﻿
+
+<div class="container mb-3">
+    <div class="titleAndSort">
+        <h2 class="mb-3">Board</h2>
+        <div>
+            <button id="refreshBtn"><i class="fas fa-redo-alt"></i></button>
+            <select id="sortPost">
+                <option selected disabled>Sort by</option>
+                <option value="recentDate">Date(recent)</option>
+                <option value="oldestDate">Date(oldest)</option>
+                <option value="Likes">Likes</option>
+                <option value="Views">Views</option>
+            </select>
+        </div>
+    </div>
+    <table class="board-table table table-sm border-bottom text-center">
+
+        <thead class="thead-light">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Num</th>
+                <th scope="col">Title</th>
+                <th scope="col">Writer</th>
+                <th scope="col">Category</th>
+                <th scope="col">Views</th>
+                <th scope="col">Likes</th>
+                <th scope="col" class="date">Date</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="post-list">
+            <tr id="loadingSpiner">
+                <td colspan="9"><i class="fas fa-spinner"></i></td>
+            </tr>
+              
+            
+        </tbody>
+    </table>
+    <div>
+        <a class="btn btn-primary" asp-controller="Home" asp-action="AddPost">New</a>
+        <button class="btn btn-primary" id="deleteBtn">Delete</button>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript" defer>
+        function makeTable(postArr) {
+            postArr.forEach(post => {
+                $("#post-list").append(
+
+                    $(`
+                       <tr data-post-id="${post.id}">
+                              <td><input type="checkbox" name="postCheck" id="postCheck" /></td>
+                              <td id="tdNum">${post.id}</td>
+                              <td> <a href="/Home/ShowPost/${post.id}" >${post.title}</a></td>
+                              <td>${post.writer}</td>
+                              <td id="tdNum">${post.categoryID}</td>
+                              <td id="tdNum">${post.viewCount}</td>
+                              <td id="tdNum">${post.likeCount}</td>
+                              <td>${new Date(post.date).toDateString()}</td>
+                              <td><a href="/Home/EditPost/${post.id}" >Edit</a> / <a href="#" id="deleteActionBtn" data-post-id="${post.id}">Delete</a></td>
+   
+                       </tr>
+                     `)
+                )
+            })
+        }
+        function sortPost(val) {
+            $("#post-list").html('');
+            $("#loadingSpiner").show();
+            $.ajax("/api/posts")
+                .done(function (data, status, jqXHR) {
+                    var posts = jqXHR.responseJSON;
+                    posts.sort(function (a, b) {
+                        if (val == "Views") {
+                            return b.viewCount - a.viewCount;
+                        } else if (val == "recentDate") {
+                            return new Date(b.date) - new Date(a.date);
+                        } else if (val == "oldestDate") {
+                            return new Date(a.date) - new Date(b.date);
+                        } else if (val == "Likes") {
+                            return b.likeCount - a.likeCount;
+                        }
+                       
+
+                    });
+                    $("#loadingSpiner").hide();
+                    makeTable(posts);
+                })
+        }
+
+        function refreshBoard(val) {
+            if (val == null) {
+                $("#post-list").html('');
+                $("#loadingSpiner").show();
+                $.ajax("/api/posts")
+                    .done(function (data, status, jqXHR) {
+                        var posts = jqXHR.responseJSON;
+                        makeTable(posts);
+                    })
+            } else {
+                sortPost(val);
+            }
+        }
+        
+
+        $(function () {
+
+            let val;
+
+            $.ajax("/api/posts")
+                .done(function (data, status, jqXHR) {
+                    var posts = jqXHR.responseJSON;
+                    $("#loadingSpiner").hide();
+                    makeTable(posts);
+            })
+
+
+            $("#refreshBtn").on("click", function () {
+                refreshBoard(val);
+            })
+
+            $("#sortPost").on("change", function () {
+                val=($(this).val());
+                if (val === "Views") {
+
+                    sortPost(val);
+
+                } else if (val === "recentDate") {
+
+                    sortPost(val);
+       
+                } else if (val === "oldestDate") {
+
+                    sortPost(val);
+                   
+                } else if (val === "Likes") {
+
+                    sortPost(val);
+                  
+                }
+            })
+
+            $("#post-list").add();
+
+            $("#deleteBtn").on('click', function () {
+                if (confirm("Do you want to delete the post?")) {
+                    $("#post-list tr").filter(function () {
+                        return $("input[name=postCheck]", this).prop("checked");
+                    }).each(function () {
+
+                        $.ajax(`/api/posts/${$(this).data("post-id")}`, { method: "DELETE" })
+                            .done(function (response) {
+                                refreshBoard(val);
+                            });
+
+                    })
+                }
+               
+            })
+
+            $(document).on('click','#deleteActionBtn', function (e) {
+                e.preventDefault();
+        
+                if (confirm("Do you want to delete the post?")) {
+        
+                    $.ajax(`/api/posts/${$(this).data("post-id")}`, { method: "DELETE"})
+                        .done(function (response) {
+                            refreshBoard(val);
+                        });
+                }
+            })
+          
+
+        });
+    </script>
+}
