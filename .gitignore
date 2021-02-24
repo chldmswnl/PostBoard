@@ -3,3 +3,5 @@ bin
 obj
 temp
 out
+appsettings.*.json
+appsettings.json
